@@ -1,0 +1,224 @@
+# ✅ PROJECT CHECKLIST
+
+**Project:** Privacy-First Productivity Dashboard (Prodly)
+
+---
+
+## 🧱 PHASE 0 — Planning & Setup
+
+* [ ] Finalize feature scope (MVP vs v1)
+* [ ] Lock UI (dashboard, sidebar, cards)
+* [ ] Decide tech stack (Next.js, Tailwind, LLAMA.js)
+* [ ] Create GitHub repo
+* [ ] Setup CI (lint, typecheck, build)
+
+---
+
+## 🖥️ PHASE 1 — Frontend Foundation (UI First)
+
+### Project Setup
+
+* [ ] Initialize Next.js (App Router + TypeScript)
+* [ ] Configure Tailwind CSS (dark theme)
+* [ ] Setup global layout (sidebar + main panel)
+* [ ] Define design tokens (colors, spacing, radius)
+
+### Sidebar
+
+* [ ] Logo + App name
+* [ ] Navigation (To-Dos, Email, Tasks, Notes)
+* [ ] Active state styling
+* [ ] Collapsible sidebar
+* [ ] Profile section
+
+### Dashboard Layout
+
+* [ ] Grid-based dashboard system
+* [ ] Draggable cards (dnd-kit / react-grid-layout)
+* [ ] Responsive layout
+* [ ] Card loading skeletons
+
+---
+
+## 📊 PHASE 2 — Dashboard Cards
+
+### Email Card
+
+* [ ] Email preview list
+* [ ] Sender + subject + time
+* [ ] Click → Email module
+* [ ] Loading / empty states
+
+### Task Card
+
+* [ ] Task progress indicator
+* [ ] Task status (Todo / In Progress / Done)
+* [ ] Due date indicator
+* [ ] Click → Task module
+
+### To-Do Card
+
+* [ ] Checklist UI
+* [ ] Quick add To-Do
+* [ ] Inline status toggle
+* [ ] Tags (Work / Dev / Docs)
+
+### Notes Card
+
+* [ ] Notes preview tiles
+* [ ] Title + snippet
+* [ ] Add new note
+* [ ] Click → Notes module
+
+### Calendar Card
+
+* [ ] Day view
+* [ ] Event timeline
+* [ ] Highlight current time
+* [ ] Click → Calendar module
+
+### Activity Heatmap
+
+* [ ] Daily activity tracking
+* [ ] GitHub-style heatmap
+* [ ] Hover details
+
+---
+
+## 🔐 PHASE 3 — Authentication & Google APIs
+
+### Auth
+
+* [ ] Setup NextAuth.js
+* [ ] Google OAuth provider
+* [ ] Secure session handling
+* [ ] Logout flow
+
+### Gmail API
+
+* [ ] Request Gmail scopes
+* [ ] Fetch inbox
+* [ ] Mark read/unread
+* [ ] Email → Task conversion
+
+### Google Calendar API
+
+* [ ] Fetch events
+* [ ] Create / update events
+* [ ] Sync tasks ↔ calendar
+* [ ] Handle time zones
+
+---
+
+## 💾 PHASE 4 — Local-First Data System
+
+* [ ] Setup IndexedDB (Dexie.js)
+* [ ] Define local schemas:
+
+  * [ ] Tasks
+  * [ ] Emails
+  * [ ] Calendar events
+  * [ ] Notes
+* [ ] Offline read/write
+* [ ] Sync Google data → local DB
+* [ ] Conflict handling
+
+---
+
+## 🧠 PHASE 5 — Local AI (LLAMA.js)
+
+### Model Setup
+
+* [ ] Choose quantized LLaMA model (4-bit / 8-bit)
+* [ ] Host model files (Vercel/CDN)
+* [ ] Lazy-load model
+* [ ] Cache model in IndexedDB
+* [ ] WebGPU / WASM fallback
+
+### AI Features
+
+* [ ] Email summarization
+* [ ] Task extraction from email
+* [ ] Notes summarization
+* [ ] Daily agenda generation
+* [ ] Context-aware prompts
+
+### AI UI
+
+* [ ] “Ask AI” button
+* [ ] AI command panel
+* [ ] Loading / progress UI
+* [ ] Cancel inference
+
+---
+
+## 🔗 PHASE 6 — Smart Linking & Automation
+
+* [ ] Link email ↔ task
+* [ ] Link task ↔ note
+* [ ] Link task ↔ calendar event
+* [ ] Auto-suggest links via AI
+* [ ] Simple automation rules:
+
+  * [ ] Email → Task
+  * [ ] Task due → Reminder
+
+---
+
+## 🎯 PHASE 7 — Productivity Enhancements
+
+* [ ] Focus mode
+* [ ] Pomodoro timer
+* [ ] Task time tracking
+* [ ] Smart reminders
+* [ ] Priority detection
+
+---
+
+## ⚡ PHASE 8 — Performance & UX Polish
+
+* [ ] Lazy-load modules
+* [ ] Memoize heavy components
+* [ ] Reduce re-renders
+* [ ] Error boundaries
+* [ ] Empty & error states
+* [ ] Micro-animations (Framer Motion)
+
+---
+
+## 🔒 PHASE 9 — Security & Privacy
+
+* [ ] No AI data leaves client
+* [ ] Secure OAuth token storage
+* [ ] Optional encryption for notes
+* [ ] Clear privacy messaging in UI
+* [ ] AI on/off toggle
+
+---
+
+## 🚀 PHASE 10 — Deployment & Release
+
+* [ ] Environment variables setup
+* [ ] Production build test
+* [ ] Deploy to Vercel
+* [ ] Domain setup
+* [ ] Monitoring & logging
+* [ ] MVP release
+
+---
+
+## 🧭 POST-MVP (Optional)
+
+* [ ] Desktop app (Electron / Tauri)
+* [ ] Mobile app
+* [ ] Team collaboration
+* [ ] Encrypted cloud backup
+* [ ] Plugin system
+
+---
+
+### 🟢 RECOMMENDED EXECUTION ORDER
+
+**UI → Auth → Data → AI → Intelligence → Polish → Deploy**
+
+---

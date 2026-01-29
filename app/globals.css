@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Base */
+  --background: #0b0d0e;
+  --foreground: #e5e7eb;
+
+  /* Surfaces */
+  --surface: #111315;
+  --surface-muted: #16191c;
+
+  /* Accent (Neon Green) */
+  --accent: #9adf3b;
+  --accent-foreground: #0b0d0e;
+
+  /* UI */
+  --border: #1f2428;
+  --muted: #9ca3af;
+  --muted-foreground: #6b7280;
+
+  /* Status */
+  --success: #9adf3b;
+  --warning: #facc15;
+  --danger: #ef4444;
+
+  /* Radius */
+  --radius: 14px;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  --radius-lg: var(--radius);
+
+  --font-sans: var(--font-inter-tight);
+  /* --font-serif: var(--font-libre-baskerville); */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif;
+  } */
 }
