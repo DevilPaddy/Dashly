@@ -1,16 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { connectDB } from "../../../lib/mongodb";
-import User from "../../../models/User";
-
-const GOOGLE_SCOPES = [
-  "openid",
-  "email",
-  "profile",
-  "https://www.googleapis.com/auth/calendar",
-  "https://www.googleapis.com/auth/gmail.readonly",
-  "https://www.googleapis.com/auth/gmail.modify",
-].join(" ");
+import { connectDB } from "@/app/lib/db";
+import User from "@/app/models/User";
 
 const handler = NextAuth({
   providers: [
@@ -19,54 +10,48 @@ const handler = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
       authorization: {
         params: {
-          scope: GOOGLE_SCOPES,
-          access_type: "offline",
-          prompt: "consent",
+          scope: "openid email profile https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/calendar.readonly",
         },
       },
     }),
   ],
-
-  session: {
-    strategy: "jwt",
-  },
-
   callbacks: {
-
     async signIn({ user, account }) {
-      if (!account || account.provider !== "google") return false;
-
-      await connectDB();
-
-      await User.findOneAndUpdate(
-        {
-          provider: "google",
-          providerAccountId: account.providerAccountId,
-        },
-        {
-          name: user.name,
-          email: user.email,
-          image: user.image,
-
-          provider: "google",
-          providerAccountId: account.providerAccountId,
-
-          oauth: {
-            accessToken: account.access_token,
-            refreshToken: account.refresh_token,
-            accessTokenExpiry: new Date(account.expires_at! * 1000),
-            scopes: account.scope?.split(" ") ?? [],
-          },
-        },
-        {
-          upsert: true,
-          new: true,
+      if (account?.provider === "google") {
+        try {
+          await connectDB();
+          
+          // Check if user exists
+          let existingUser = await User.findOne({ email: user.email });
+          
+          if (!existingUser) {
+            // Create new user
+            existingUser = await User.create({
+              email: user.email!,
+              name: user.name!,
+              picture: user.image || undefined,
+              googleId: account.providerAccountId,
+            });
+          }
+          
+          return true;
+        } catch (error) {
+          console.error("Error during sign in:", error);
+          return false;
         }
-      );
-
+      }
       return true;
     },
-
+    async session({ session, token }) {
+      if (session.user?.email) {
+        await connectDB();
+        const user = await User.findOne({ email: session.user.email });
+        if (user) {
+          session.user.id = user._id.toString();
+        }
+      }
+      return session;
+    },
     async jwt({ token, account }) {
       if (account) {
         token.accessToken = account.access_token;
@@ -74,12 +59,14 @@ const handler = NextAuth({
       }
       return token;
     },
-
-    async session({ session, token }) {
-      session.accessToken = token.accessToken;
-      return session;
-    },
   },
+  pages: {
+    signIn: "/login",
+  },
+  session: {
+    strategy: "jwt",
+  },
+  secret: process.env.NEXTAUTH_SECRET,
 });
 
 export { handler as GET, handler as POST };

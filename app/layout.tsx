@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Inter_Tight, Libre_Baskerville } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/pageUi/Navbar";
-import Footer from "./components/pageUi/Footer";
-
+import SessionProvider from "@/components/providers/SessionProvider";
 
 const interTight = Inter_Tight({
   subsets: ["latin"],
@@ -23,7 +21,6 @@ export const metadata: Metadata = {
   description: "Privacy-first productivity dashboard",
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,11 +35,9 @@ export default function RootLayout({
           antialiased
         `}
       >
-        <Navbar />
-        <div className="mx-auto">
+        <SessionProvider>
           {children}
-        </div>
-        <Footer />
+        </SessionProvider>
       </body>
     </html>
   );

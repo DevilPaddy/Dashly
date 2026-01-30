@@ -1,118 +1,63 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-
-
+/**
+ * User interface matching the design specification
+ * OAuth tokens are stored separately in OAuthToken model for security
+ */
 export interface IUser extends Document {
+    _id: mongoose.Types.ObjectId;
+    email: string;
     name?: string;
-    email?: string;
-    image?: string;
-
-    provider: "google";
-    providerAccountId: string;
-
-    oauth: {
-        accessToken?: string;
-        refreshToken?: string;
-        accessTokenExpiry?: Date;
-        scopes: string[];
-    };
-
-    preferences: {
-        theme: "dark" | "light" | "system";
-        locale: string;
-        timezone?: string;
-    };
-
-    ai: {
-        enabled: boolean;
-        localOnly: boolean;
-        model: string;
-    };
-
-    sync: {
-        lastGmailSyncAt?: Date;
-        lastCalendarSyncAt?: Date;
-    };
-
+    picture?: string;
+    googleId: string;
     createdAt: Date;
     updatedAt: Date;
 }
 
-
-
+/**
+ * User schema with proper indexing for performance and security
+ */
 const UserSchema = new Schema<IUser>(
     {
-        name: String,
-        email: { type: String, unique: true, sparse: true },
-        image: String,
-
-        provider: {
-            type: String,
-            required: true,
-            enum: ["google"],
-        },
-
-        providerAccountId: {
-            type: String,
+        email: { 
+            type: String, 
             required: true,
             unique: true,
             index: true,
+            lowercase: true,
+            trim: true
         },
-
-        oauth: {
-            accessToken: { type: String },
-            refreshToken: { type: String },
-            accessTokenExpiry: { type: Date },
-            scopes: {
-                type: [String],
-                default: [],
-            },
+        name: { 
+            type: String,
+            trim: true
         },
-
-        preferences: {
-            theme: {
-                type: String,
-                enum: ["dark", "light", "system"],
-                default: "dark",
-            },
-            locale: {
-                type: String,
-                default: "en",
-            },
-            timezone: String,
+        picture: { 
+            type: String,
+            trim: true
         },
-
-        ai: {
-            enabled: {
-                type: Boolean,
-                default: true,
-            },
-            localOnly: {
-                type: Boolean,
-                default: true,
-            },
-            model: {
-                type: String,
-                default: "llama-7b-4bit",
-            },
-        },
-
-        sync: {
-            lastGmailSyncAt: Date,
-            lastCalendarSyncAt: Date,
-        },
+        googleId: { 
+            type: String, 
+            required: true,
+            unique: true,
+            index: true
+        }
     },
     {
-        timestamps: true,
+        timestamps: true, // Automatically adds createdAt and updatedAt
+        collection: 'users'
     }
 );
 
+// Compound index for efficient queries
+UserSchema.index({ googleId: 1, email: 1 });
 
-UserSchema.index({ email: 1 });
-UserSchema.index({ provider: 1, providerAccountId: 1 });
+// Ensure indexes are created
+UserSchema.index({ email: 1 }, { unique: true });
+UserSchema.index({ googleId: 1 }, { unique: true });
 
-
-const User: Model<IUser> =
-    mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
+/**
+ * User model with proper typing
+ */
+const User: Model<IUser> = mongoose.models.User || mongoose.model<IUser>("User", UserSchema);
 
 export default User;

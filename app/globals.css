@@ -1,66 +1,79 @@
-@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap');
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  /* Base */
-  --background: #0b0d0e;
-  --foreground: #e5e7eb;
+  /* Background */
+  --background: #000000;
+  --background-secondary: #0a0a0a;
+  --card-bg: #111111;
+  --card-border: #1a1a1a;
 
-  /* Surfaces */
-  --surface: #111315;
-  --surface-muted: #16191c;
+  /* Accent Colors */
+  --accent-green: #a4fc3c;
+  --accent-green-dim: #6b9b2f;
 
-  /* Accent (Neon Green) */
-  --accent: #9adf3b;
-  --accent-foreground: #0b0d0e;
+  /* Text */
+  --foreground: #ffffff;
+  --foreground-secondary: #a1a1a1;
+  --foreground-tertiary: #737373;
 
-  /* UI */
-  --border: #1f2428;
-  --muted: #9ca3af;
-  --muted-foreground: #6b7280;
+  /* Status Colors */
+  --status-in-progress: #a4fc3c;
+  --status-done: #4ade80;
+  --status-todo: #737373;
 
-  /* Status */
-  --success: #9adf3b;
-  --warning: #facc15;
-  --danger: #ef4444;
+  /* Borders */
+  --border: #1a1a1a;
+  --border-hover: #2a2a2a;
 
-  /* Radius */
-  --radius: 14px;
+  /* Fonts */
+  --font-sans: 'Inter Tight', sans-serif;
+  --font-serif: 'Libre Baskerville', serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-
-  --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
-
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-
-  --color-border: var(--border);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-
-  --color-success: var(--success);
-  --color-warning: var(--warning);
-  --color-danger: var(--danger);
-
-  --radius-lg: var(--radius);
-
-  --font-sans: var(--font-inter-tight);
-  /* --font-serif: var(--font-libre-baskerville); */
+* {
+  border-color: #1a1a1a;
 }
 
-@layer base {
-  body {
-    @apply bg-background text-foreground font-sans;
-  }
+body {
+  background-color: #000000;
+  color: #ffffff;
+  font-family: 'Inter Tight', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  /* h1,
-  h2,
-  h3,
-  h4 {
-    @apply font-serif;
-  } */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Libre Baskerville', serif;
+}
+
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  border-color: #2a2a2a;
+}
+
+.nav-item-active {
+  background-color: #a4fc3c;
+  color: #000000;
+  font-weight: 500;
+}
+
+.nav-item-inactive {
+  color: #a1a1a1;
+}
+
+.nav-item-inactive:hover {
+  color: #ffffff;
+  background-color: #1a1a1a;
 }

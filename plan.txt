@@ -1,6 +1,50 @@
 # ✅ PROJECT CHECKLIST
 
-**Project:** Privacy-First Productivity Dashboard (Prodly)
+**Project:** Privacy-First Productivity Dashboard (Dashly)
+
+---
+src/
+├─ app/
+│  └─ api/
+│     ├─ auth/
+│     │  └─ route.ts
+│     ├─ gmail/
+│     │  ├─ sync/route.ts
+│     │  └─ read/route.ts
+│     ├─ calendar/
+│     │  ├─ sync/route.ts
+│     │  └─ create/route.ts
+│     ├─ tasks/
+│     │  ├─ route.ts        // GET, POST
+│     │  └─ [id]/route.ts   // GET, PATCH, DELETE
+│     ├─ notes/
+│     │  ├─ route.ts
+│     │  └─ [id]/route.ts
+│     ├─ emails/
+│     │  ├─ route.ts
+│     │  └─ [id]/route.ts
+│     └─ health/route.ts
+│
+├─ lib/
+│  ├─ db.ts                // Mongo connection
+│  ├─ auth.ts              // session / user resolver
+│  ├─ google.ts            // Google API client
+│  ├─ crypto.ts            // token encryption
+│
+├─ services/
+│  ├─ task.service.ts
+│  ├─ note.service.ts
+│  ├─ email.service.ts
+│  ├─ calendar.service.ts
+│  └─ sync.service.ts
+│
+├─ models/
+│  ├─ User.ts
+│  ├─ OAuthToken.ts
+│  ├─ Task.ts
+│  ├─ Note.ts
+│  ├─ Email.ts
+│  └─ CalendarEvent.ts
 
 ---
 

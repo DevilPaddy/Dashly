@@ -1,95 +1,98 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
+/**
+ * Calendar Event interface matching the design specification
+ * Stores Google Calendar event data with task linking support
+ */
 export interface ICalendarEvent extends Document {
+    _id: mongoose.Types.ObjectId;
     userId: mongoose.Types.ObjectId;
-
-    googleEventId: string;
-
+    googleEventId: string;        // Google Calendar Event ID
     title: string;
     description?: string;
-
     startTime: Date;
     endTime: Date;
-    timezone: string;
-
+    location?: string;
+    attendees: string[];
     linkedTaskId?: mongoose.Types.ObjectId;
-
-    syncedAt: Date;
-
     createdAt: Date;
     updatedAt: Date;
 }
 
+/**
+ * Calendar Event schema with proper indexing for Google Calendar integration
+ * Supports efficient date range queries and unique constraints
+ */
 const CalendarEventSchema = new Schema<ICalendarEvent>(
     {
         userId: {
             type: Schema.Types.ObjectId,
             ref: "User",
             required: true,
-            index: true,
+            index: true
         },
-
         googleEventId: {
             type: String,
             required: true,
-            index: true,
+            trim: true
         },
-
         title: {
             type: String,
             required: true,
             trim: true,
+            maxlength: 200
         },
-
         description: {
             type: String,
+            trim: true
         },
-
         startTime: {
             type: Date,
             required: true,
-            index: true,
+            index: true
         },
-
         endTime: {
             type: Date,
             required: true,
-            index: true,
+            index: true
         },
-
-        timezone: {
+        location: {
             type: String,
-            required: true,
+            trim: true
         },
-
+        attendees: {
+            type: [String],
+            required: true,
+            default: []
+        },
         linkedTaskId: {
             type: Schema.Types.ObjectId,
-            ref: "Task",
-        },
-
-        syncedAt: {
-            type: Date,
-            required: true,
-            default: Date.now,
-        },
+            ref: "Task"
+        }
     },
     {
-        timestamps: true,
+        timestamps: true, // Automatically adds createdAt and updatedAt
+        collection: 'calendarevents'
     }
 );
 
-// 🔐 Prevent duplicate Google events per user
-CalendarEventSchema.index(
-    { userId: 1, googleEventId: 1 },
-    { unique: true }
-);
+// Unique constraint: one event per user per googleEventId
+CalendarEventSchema.index({ userId: 1, googleEventId: 1 }, { unique: true });
 
-// ⚡ Calendar views
+// Compound indexes for efficient calendar queries
 CalendarEventSchema.index({ userId: 1, startTime: 1 });
-CalendarEventSchema.index({ userId: 1, linkedTaskId: 1 });
+CalendarEventSchema.index({ userId: 1, endTime: 1 });
+CalendarEventSchema.index({ userId: 1, startTime: 1, endTime: 1 });
 
-const CalendarEvent: Model<ICalendarEvent> =
-    mongoose.models.CalendarEvent ||
-    mongoose.model<ICalendarEvent>("CalendarEvent", CalendarEventSchema);
+// Additional indexes for performance
+CalendarEventSchema.index({ userId: 1 });
+CalendarEventSchema.index({ googleEventId: 1 });
+CalendarEventSchema.index({ linkedTaskId: 1 });
+
+/**
+ * Calendar Event model with proper typing
+ */
+const CalendarEvent: Model<ICalendarEvent> = 
+    mongoose.models.CalendarEvent || mongoose.model<ICalendarEvent>("CalendarEvent", CalendarEventSchema);
 
 export default CalendarEvent;
