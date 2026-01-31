@@ -1,6 +1,6 @@
 // src/services/email.service.ts
 import Email from "../models/Email";
-import { connectDB } from "../lib/mongodb";
+import { connectDB } from "../lib/db";
 
 type GmailEmail = {
   gmailId: string;

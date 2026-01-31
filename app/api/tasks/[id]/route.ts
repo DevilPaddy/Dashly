@@ -6,13 +6,15 @@ import Task from "../../../models/Task";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const task = await Task.findById(params.id)
+        const task = await Task.findById(id)
             .populate('linkedEmailId', 'subject from')
             .populate('linkedNoteId', 'title')
             .lean();
@@ -47,13 +49,15 @@ export async function GET(
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const task = await Task.findById(params.id);
+        const task = await Task.findById(id);
 
         if (!task) {
             return createErrorResponse(
@@ -106,7 +110,7 @@ export async function PATCH(
         }
 
         const updatedTask = await Task.findByIdAndUpdate(
-            params.id,
+            id,
             { ...updates, updatedAt: new Date() },
             { new: true, runValidators: true }
         ).populate('linkedEmailId', 'subject from')
@@ -136,13 +140,15 @@ export async function PATCH(
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const task = await Task.findById(params.id);
+        const task = await Task.findById(id);
 
         if (!task) {
             return createErrorResponse(
@@ -154,7 +160,7 @@ export async function DELETE(
 
         verifyOwnership(task.userId.toString(), user._id.toString());
 
-        await Task.findByIdAndDelete(params.id);
+        await Task.findByIdAndDelete(id);
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

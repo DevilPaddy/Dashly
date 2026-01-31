@@ -4,6 +4,7 @@ import { Mail } from 'lucide-react';
 import { useEmails } from '@/hooks/useEmails';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatTime } from '@/app/lib/utils';
+import { Email } from '@/types/email';
 
 export default function EmailCard() {
   const { emails, isLoading } = useEmails({ limit: 3, isRead: false });
@@ -22,7 +23,7 @@ export default function EmailCard() {
         ) : emails.length === 0 ? (
           <div className="text-[#737373]">No unread emails</div>
         ) : (
-          emails.map((email) => (
+          emails.map((email: Email) => (
             <div 
               key={email._id} 
               className="flex items-start gap-3 hover:bg-[#1a1a1a] p-2 rounded-lg transition-colors cursor-pointer"

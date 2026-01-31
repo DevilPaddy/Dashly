@@ -4,22 +4,23 @@ import { Calendar, Clock } from 'lucide-react';
 import { useCalendar } from '@/hooks/useCalendar';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatTime } from '@/app/lib/utils';
+import { CalendarEvent } from '@/types/calendar';
 
 export default function CalendarCard() {
   const { events, isLoading } = useCalendar();
   
   // Get today's events
   const today = new Date();
-  const todayEvents = events.filter((event) => {
+  const todayEvents = events.filter((event: CalendarEvent) => {
     const eventDate = new Date(event.startTime);
     return eventDate.toDateString() === today.toDateString();
   }).slice(0, 3);
 
   // Get next upcoming event
-  const upcomingEvents = events.filter((event) => {
+  const upcomingEvents = events.filter((event: CalendarEvent) => {
     const eventDate = new Date(event.startTime);
     return eventDate > today;
-  }).sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
+  }).sort((a: CalendarEvent, b: CalendarEvent) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
   
   const nextEvent = upcomingEvents[0];
 
@@ -60,7 +61,7 @@ export default function CalendarCard() {
                 <div className="text-[#737373] text-sm">No events today</div>
               ) : (
                 <div className="space-y-2">
-                  {todayEvents.map((event) => (
+                  {todayEvents.map((event: CalendarEvent) => (
                     <div 
                       key={event._id} 
                       className="flex items-center justify-between p-2 hover:bg-[#1a1a1a] rounded-lg transition-colors cursor-pointer"

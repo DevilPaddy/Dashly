@@ -6,13 +6,15 @@ import Email from "../../../models/Email";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const email = await Email.findById(params.id)
+        const email = await Email.findById(id)
             .populate('linkedTaskId', 'title status')
             .lean();
 
@@ -46,13 +48,15 @@ export async function GET(
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const email = await Email.findById(params.id);
+        const email = await Email.findById(id);
 
         if (!email) {
             return createErrorResponse(
@@ -77,7 +81,7 @@ export async function PATCH(
         }
 
         const updatedEmail = await Email.findByIdAndUpdate(
-            params.id,
+            id,
             { ...updates, updatedAt: new Date() },
             { new: true, runValidators: true }
         ).populate('linkedTaskId', 'title status');
@@ -102,13 +106,15 @@ export async function PATCH(
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const email = await Email.findById(params.id);
+        const email = await Email.findById(id);
 
         if (!email) {
             return createErrorResponse(
@@ -120,7 +126,7 @@ export async function DELETE(
 
         verifyOwnership(email.userId.toString(), user._id.toString());
 
-        await Email.findByIdAndDelete(params.id);
+        await Email.findByIdAndDelete(id);
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

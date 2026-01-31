@@ -4,13 +4,14 @@ import { FileText, Plus } from 'lucide-react';
 import { useNotes } from '@/hooks/useNotes';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatTime } from '@/app/lib/utils';
+import { Note } from '@/types/note';
 
 export default function NotesCard() {
   const { notes, isLoading } = useNotes();
   
   // Get recent notes (last 3)
   const recentNotes = notes
-    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+    .sort((a: Note, b: Note) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
     .slice(0, 3);
 
   return (
@@ -38,7 +39,7 @@ export default function NotesCard() {
             </button>
           </div>
         ) : (
-          recentNotes.map((note) => (
+          recentNotes.map((note: Note) => (
             <div 
               key={note._id} 
               className="p-3 hover:bg-[#1a1a1a] rounded-lg transition-colors cursor-pointer group"
@@ -58,7 +59,7 @@ export default function NotesCard() {
               
               {note.tags.length > 0 && (
                 <div className="flex items-center gap-1 flex-wrap">
-                  {note.tags.slice(0, 2).map((tag) => (
+                  {note.tags.slice(0, 2).map((tag: string) => (
                     <span 
                       key={tag} 
                       className="px-2 py-1 bg-[#2a2a2a] text-[#a1a1a1] text-xs rounded-full"

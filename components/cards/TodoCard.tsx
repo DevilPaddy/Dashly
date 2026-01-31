@@ -5,6 +5,7 @@ import { useTasks } from '@/hooks/useTasks';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useState } from 'react';
+import { Task } from '@/types/task';
 
 export default function TodoCard() {
   const { tasks, isLoading, updateTask } = useTasks({ status: 'todo' });
@@ -14,8 +15,7 @@ export default function TodoCard() {
     setCompletingTasks(prev => new Set(prev).add(taskId));
     try {
       await updateTask(taskId, { 
-        status: completed ? 'done' : 'todo',
-        completedAt: completed ? new Date() : undefined
+        status: completed ? 'done' : 'todo'
       });
     } finally {
       setCompletingTasks(prev => {
@@ -53,7 +53,7 @@ export default function TodoCard() {
             </button>
           </div>
         ) : (
-          todoTasks.map((task) => (
+          todoTasks.map((task: Task) => (
             <div 
               key={task._id} 
               className="flex items-start gap-3 p-2 hover:bg-[#1a1a1a] rounded-lg transition-colors group"

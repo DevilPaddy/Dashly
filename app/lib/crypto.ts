@@ -8,28 +8,37 @@ const KEY_LENGTH = 32; // 256 bits for AES-256
 // Validate and load encryption key
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY;
 
-if (!ENCRYPTION_KEY) {
-    throw new Error("ENCRYPTION_KEY environment variable is required");
-}
+// For build time, use a default key if not provided
+const DEFAULT_KEY = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"; // 64 hex chars = 32 bytes
 
-// Validate key format (should be 32-byte hex string)
 let SECRET: Buffer;
-try {
-    if (ENCRYPTION_KEY.length === 64) {
-        // Hex format (64 hex chars = 32 bytes)
-        SECRET = Buffer.from(ENCRYPTION_KEY, "hex");
-    } else if (ENCRYPTION_KEY.length === 44) {
-        // Base64 format (44 base64 chars = 32 bytes)
-        SECRET = Buffer.from(ENCRYPTION_KEY, "base64");
-    } else {
-        throw new Error("Invalid key length");
+
+if (!ENCRYPTION_KEY) {
+    if (process.env.NODE_ENV === 'production') {
+        throw new Error("ENCRYPTION_KEY environment variable is required in production");
     }
-    
-    if (SECRET.length !== KEY_LENGTH) {
-        throw new Error(`Encryption key must be exactly ${KEY_LENGTH} bytes`);
+    // Use default key for development/build
+    console.warn("⚠️  Using default encryption key. Set ENCRYPTION_KEY in production!");
+    SECRET = Buffer.from(DEFAULT_KEY, "hex");
+} else {
+    // Validate key format (should be 32-byte hex string)
+    try {
+        if (ENCRYPTION_KEY.length === 64) {
+            // Hex format (64 hex chars = 32 bytes)
+            SECRET = Buffer.from(ENCRYPTION_KEY, "hex");
+        } else if (ENCRYPTION_KEY.length === 44) {
+            // Base64 format (44 base64 chars = 32 bytes)
+            SECRET = Buffer.from(ENCRYPTION_KEY, "base64");
+        } else {
+            throw new Error("Invalid key length");
+        }
+        
+        if (SECRET.length !== KEY_LENGTH) {
+            throw new Error(`Encryption key must be exactly ${KEY_LENGTH} bytes`);
+        }
+    } catch (error) {
+        throw new Error(`Invalid ENCRYPTION_KEY format: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
-} catch (error) {
-    throw new Error(`Invalid ENCRYPTION_KEY format: ${error instanceof Error ? error.message : 'Unknown error'}`);
 }
 
 /**

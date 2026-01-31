@@ -4,6 +4,7 @@ import { User, ChevronRight } from 'lucide-react';
 import { useTasks } from '@/hooks/useTasks';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { Task } from '@/types/task';
 
 export default function TaskCard() {
   const { tasks, isLoading } = useTasks({ status: 'in_progress' });
@@ -41,7 +42,7 @@ export default function TaskCard() {
             </div>
 
             {/* Other Tasks */}
-            {tasks.slice(1, 2).map((task) => (
+            {tasks.slice(1, 2).map((task: Task) => (
               <div 
                 key={task._id} 
                 className="flex items-center justify-between p-3 bg-[#1a1a1a] rounded-lg hover:bg-[#2a2a2a] transition-colors cursor-pointer"

@@ -6,13 +6,15 @@ import Note from "../../../models/Note";
 
 export async function GET(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const note = await Note.findById(params.id)
+        const note = await Note.findById(id)
             .populate('linkedTaskIds', 'title status')
             .lean();
 
@@ -46,13 +48,15 @@ export async function GET(
 
 export async function PATCH(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const note = await Note.findById(params.id);
+        const note = await Note.findById(id);
 
         if (!note) {
             return createErrorResponse(
@@ -83,7 +87,7 @@ export async function PATCH(
         }
 
         const updatedNote = await Note.findByIdAndUpdate(
-            params.id,
+            id,
             { ...updates, updatedAt: new Date() },
             { new: true, runValidators: true }
         ).populate('linkedTaskIds', 'title status');
@@ -112,13 +116,15 @@ export async function PATCH(
 
 export async function DELETE(
     request: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const user = await requireAuth(request);
         await connectDB();
+        
+        const { id } = await params;
 
-        const note = await Note.findById(params.id);
+        const note = await Note.findById(id);
 
         if (!note) {
             return createErrorResponse(
@@ -130,7 +136,7 @@ export async function DELETE(
 
         verifyOwnership(note.userId.toString(), user._id.toString());
 
-        await Note.findByIdAndDelete(params.id);
+        await Note.findByIdAndDelete(id);
 
         return NextResponse.json({ success: true });
     } catch (error: any) {

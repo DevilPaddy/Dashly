@@ -7,6 +7,10 @@ import { useNotes } from '@/hooks/useNotes';
 import { useCalendar } from '@/hooks/useCalendar';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { formatTime } from '@/app/lib/utils';
+import { Task } from '@/types/task';
+import { Email } from '@/types/email';
+import { Note } from '@/types/note';
+import { CalendarEvent } from '@/types/calendar';
 
 interface ActivityItem {
   id: string;
@@ -27,20 +31,20 @@ export default function ActivityCard() {
   const activities: ActivityItem[] = [
     // Recent completed tasks
     ...tasks
-      .filter(task => task.status === 'done' && task.completedAt)
-      .map(task => ({
+      .filter((task: Task) => task.status === 'done')
+      .map((task: Task) => ({
         id: task._id,
         type: 'task' as const,
         title: 'Task completed',
         description: task.title,
-        timestamp: task.completedAt!,
+        timestamp: task.updatedAt,
         icon: CheckCircle,
       })),
     
     // Recent emails
     ...emails
       .slice(0, 2)
-      .map(email => ({
+      .map((email: Email) => ({
         id: email._id,
         type: 'email' as const,
         title: 'New email',
@@ -52,7 +56,7 @@ export default function ActivityCard() {
     // Recent notes
     ...notes
       .slice(0, 2)
-      .map(note => ({
+      .map((note: Note) => ({
         id: note._id,
         type: 'note' as const,
         title: 'Note updated',
@@ -63,9 +67,9 @@ export default function ActivityCard() {
     
     // Upcoming events
     ...events
-      .filter(event => new Date(event.startTime) > new Date())
+      .filter((event: CalendarEvent) => new Date(event.startTime) > new Date())
       .slice(0, 2)
-      .map(event => ({
+      .map((event: CalendarEvent) => ({
         id: event._id,
         type: 'calendar' as const,
         title: 'Upcoming event',
